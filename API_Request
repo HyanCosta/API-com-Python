@@ -1,0 +1,21 @@
+
+
+import requests
+
+def fetch_data(endpoint,filters = {}):
+    url = f'https://rickandmortyapi.com/api/{endpoint}'
+    response = requests.get(url,params=filters)
+
+    return response.json() if  response.status_code >= 200 and response.status_code <= 299 else None
+#status code entre 200 e 299 significa sucesso em http
+
+   
+
+character = fetch_data('character', {'name': 'Rick'}) #chama a requisição com tudo que tem o nome 'rick'
+
+if character:
+    print(character)
+else:
+    print('Failed to fatch data')
+
+print(character)

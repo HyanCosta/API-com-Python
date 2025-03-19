@@ -1,0 +1,67 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+livros = [
+    {
+        'id' : 1,
+        'título' : 'Arsene Lupin : O ladrão de casaca',
+        'autor' : 'Maurice Leblanc'
+
+    },
+    {
+        'id' : 2,
+        'título' : 'O apanhador no campo de centeio',
+        'autor' : 'J.D Salinger'
+    },
+    {
+        'id' : 3,
+        'título' : 'The book of goose',
+        'autor' : 'Yiyun Li'
+    }
+]
+
+# consultar todos
+@app.route('/livros',methods = ['GET'])
+def obterlivros ():
+    return jsonify(livros)
+
+#consultar por ID
+@app.route('/livros/<int:id>',methods = ['GET'])
+def obterlivroid(id):
+    for livro in livros:
+        if livro.get('id') == id:
+            return jsonify(livro)
+
+
+
+#editar
+@app.route('/livros/<int:id>',methods = ['PUT'])
+def editarlivroid(id):
+    livro_editado = request.get_json()
+    for indice,livro in enumerate(livros):
+        if livro.get('id') == id:
+            livros[indice].update(livro_editado)
+            return jsonify(livros[indice])
+        
+#adicionar livro
+@app.route('/livros',methods = ['POST'])
+def add_livro():
+    novo_livro = request.get_json()
+    livros.append(novo_livro)
+
+    return jsonify(livros)
+
+#Excluir livro
+@app.route('/livros/<int:id>',methods = ['DELETE'])
+def excluir_livro(id):
+    for indice,livro in enumerate(livros):
+        if livro.get('id') == id:
+            del livros[indice]
+
+    return jsonify(livros)
+
+
+        
+        
+app.run(port=5000,host='localhost',debug=True)
